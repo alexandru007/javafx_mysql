@@ -17,19 +17,19 @@
         </columns>
       </TableView>
       <Label layoutX="343.0" layoutY="118.0" prefHeight="17.0" prefWidth="99.0" text="Customers" />
-      <TableView layoutX="811.0" layoutY="152.0" prefHeight="200.0" prefWidth="215.0">
+      <TableView layoutX="811.0" layoutY="152.0" prefHeight="200.0" prefWidth="242.0">
          <columns>
             <TableColumn prefWidth="75.0" text="Type" />
             <TableColumn prefWidth="75.0" text="Location" />
+            <TableColumn prefWidth="75.0" text="Start Time" />
          </columns>
       </TableView>
       <Label layoutX="852.0" layoutY="118.0" prefHeight="17.0" prefWidth="99.0" text="Appointments" />
       <Button layoutX="40.0" layoutY="152.0" mnemonicParsing="false" text="Add Cutomer" />
       <Button layoutX="41.0" layoutY="193.0" mnemonicParsing="false" text="Edit Cutomer" />
-      <Button layoutX="41.0" layoutY="235.0" mnemonicParsing="false" text="Delete Cutomer" />
-      <Button layoutX="663.0" layoutY="152.0" mnemonicParsing="false" text="Add Appointment" />
+      <Button layoutX="41.0" layoutY="235.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete Cutomer" />
+      <Button layoutX="663.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
       <Button layoutX="663.0" layoutY="193.0" mnemonicParsing="false" text="Update Appointment" />
-      <Button layoutX="666.0" layoutY="235.0" mnemonicParsing="false" text="Delete Appointment" />
-      <Button layoutX="41.0" layoutY="278.0" mnemonicParsing="false" text="View Appointments" />
+      <Button layoutX="663.0" layoutY="235.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
    </children>
 </AnchorPane>

@@ -28,30 +28,22 @@ public class DBConnection {
     
     public static void MakeConnection (){
         
-        //Connection String
-        //Server name:  52.206.157.109
-        //Database name:  U03QIu
-        //Username:  U03QIu
-        //Password:  53688051379
-        // JDBC driver name and database URL
         final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://52.206.157.109/U05mXQ";
         
         //  Database credentials
         final String DBUSER = "U05mXQ";
         final String DBPASS = "53688548906";
-        
-        boolean res = false;
 
         try {
             //STEP 2: Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
+            //Class.forName("com.mysql.jdbc.Driver");
 
             //STEP 3: Open a connection
             System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(DB_URL, DBUSER, DBPASS);
         } 
-        catch (ClassNotFoundException | SQLException ex) {
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -60,48 +52,132 @@ public class DBConnection {
         conn.close();   
     }
     
-    public static  ArrayList<Customer> getAllCustomers() {
-        
-        ArrayList<Customer> customers = new ArrayList<>();
+    public static boolean isUserValid(String username, String password) {
         
         try {
-            // connect
             MakeConnection();
             Statement stmt;
             ResultSet rs = null;
             
             try {
-
                 stmt = conn.createStatement();
-                String query = "SELECT * FROM customer LIMIT 5";
+                String query = "SELECT * FROM user where userName='"+username+"' AND password='"+password+"'";
                 rs = stmt.executeQuery(query);
 
-                while (rs.next()) {
+                // if anything was returned
+                if(rs.isBeforeFirst()){
                     
-                    // while there is something in the row, look for next
-                    int id = rs.getInt("customerId"); 
-                    String name = rs.getString("customerName");
+                    // get the user id
+                    rs.next();
+                    UserClass.setCurrentUserID(rs.getInt("userId"));
                     
-                    Customer customer = new Customer();
-                    customer.setId(id);
-                    customer.setName(name);
-                    
-                    customers.add(customer);
+                    return true;
                 }
-            } 
-            catch (SQLException ex) {
-                ex.printStackTrace();
-
+                    
+                
+            } catch (Exception e) {
             }
             
-            //close
-            CloseConnection();
             
+        } catch (Exception e) {
+        }
+        
+        return false;
+    }
+    
+    public static  ArrayList<Customer> getAllCustomers() {
+        
+        ArrayList<Customer> customers = new ArrayList<>();
+        
+        try {
+
+            MakeConnection();
+
+            Statement stmt = conn.createStatement();
+            String query = "SELECT customer.customerId, "
+                    + "customer.customerName, "
+                    + "address.address, "
+                    + "address.phone, "
+                    + "city.city,"
+                    + "country.county "
+                    + "FROM customer "
+                    + "INNER JOIN address ON customer.addressId = address.addressId "
+                    + "INNER JOIN city ON address.cityId = city.addressId "
+                    + "INNER JOIN country ON city.countryId = country.countryId "
+                    + "AND LIMIT 5";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+
+                // while there is something in the row, look for next
+                int id = rs.getInt(0);
+                String name = rs.getString(1);
+                String address = rs.getString(2);
+                String phone = rs.getString(3);
+                String city = rs.getString(4);
+                String country = rs.getString(5);
+
+                Customer customer = new Customer();
+                customer.setId(id);
+                customer.setName(name);
+                customer.setAddress(address);
+                customer.setPhone(phone);
+                customer.setCity(city);
+                customer.setCountry(country);
+
+                customers.add(customer);
+            }
+
+            CloseConnection();
         } 
         catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return customers;
+    }
+
+    public static void addCustomer(Customer customer) {
+
+        //
+        try {
+            MakeConnection();
+            Statement stmt = conn.createStatement();
+
+            String customerName = customer.getName();
+            //String address = customer.getAddress();
+
+            String query
+                    = String.format("INSERT INTO customer('customerName') values('%s')",
+                            customerName);
+            stmt.executeUpdate(query);
+
+            CloseConnection();
+
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+    
+    public static void deleteCustomer(int customerId) {
+        
+        try {
+            MakeConnection();
+            Statement stmt;
+            
+            stmt = conn.createStatement();
+            String query = "DELETE FROM customer WHERE customerId='"+customerId+"'";
+            stmt.executeUpdate(query);
+            
+            //close
+            CloseConnection();
+            
+            
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }  
     }
 }

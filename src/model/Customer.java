@@ -14,6 +14,7 @@ public class Customer {
     private int id;
     private String name;
     private String address;
+    private String phone;
     private String city;
     private String country;
 
@@ -86,7 +87,19 @@ public class Customer {
     public void setCountry(String country) {
         this.country = country;
     }
-    
-    
-    
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
 }

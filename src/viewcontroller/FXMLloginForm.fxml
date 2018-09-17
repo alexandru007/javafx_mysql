@@ -12,6 +12,6 @@
       <Label fx:id="passwordLabel" layoutX="177.0" layoutY="192.0" prefHeight="17.0" prefWidth="61.0" text="password" />
       <TextField fx:id="passwordTextField" layoutX="252.0" layoutY="188.0" />
       <Button fx:id="loginButton" layoutX="358.0" layoutY="241.0" mnemonicParsing="false" onAction="#loadCustomerScreen" text="login" />
-      <Label fx:id="errorMessageLabel" layoutX="177.0" layoutY="283.0" prefHeight="17.0" prefWidth="221.0" />
+      <Label fx:id="errorMessageLabel" layoutX="177.0" layoutY="283.0" prefHeight="17.0" prefWidth="221.0" textFill="RED" />
    </children>
 </AnchorPane>

@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import scheduleapp.DBConnection;
 import scheduleapp.UserClass;
 
 
@@ -71,7 +72,9 @@ public class FXMLloginFormController implements Initializable {
         }
         else {
             // display error message in 2 languages
-            errorMessageLabel.setText("wrong user");
+            errorMessageLabel.setText("wrong username or password, try again");
+            usernameTextField.setText("");
+            passwordTextField.setText("");
         }
         
         
@@ -84,10 +87,7 @@ public class FXMLloginFormController implements Initializable {
         String password = passwordTextField.getText();
         
         // compare the values with db
-        String usernameDB = "test";
-        String passwordDB = "test";
-        
-        return true;
+        return DBConnection.isUserValid(username, password);
     }
     
     public int getUserID(String username) {
