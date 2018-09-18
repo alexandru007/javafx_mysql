@@ -41,6 +41,7 @@ public class FXMLCustomerController implements Initializable {
     @FXML private TableColumn<Customer, Integer> idColumn;
     @FXML private TableColumn<Customer, String> nameColumn;
     @FXML private TableColumn<Customer, String> addressColumn;
+    @FXML private TableColumn<Customer, String> phoneColumn;
     @FXML private TableColumn<Customer, String> cityColumn;
     @FXML private TableColumn<Customer, String> countryColumn;
     
@@ -51,12 +52,39 @@ public class FXMLCustomerController implements Initializable {
     }
     
     // add customer
+    @FXML
     public void loadAddCustomerScene(ActionEvent event) throws IOException{
         
-        // get the hold of the stage (window of the button) 
-        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();   
-        Parent root = FXMLLoader.load(getClass().getResource("/View_Controller/FXMLAddCustomer.fxml"));   
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/viewcontroller/FXMLAddCustomer.fxml"));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
+        
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+    }
+    
+    
+    // edit customer
+    public void loadEditCustomerScene(ActionEvent event) throws IOException{
+        
+        // check if no customer is selected
+        Customer customer = tableViewCustomer.getSelectionModel().getSelectedItem();
+        
+        if (customer == null)
+            return;
+        
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/viewcontroller/FXMLEditCustomer.fxml"));
+        Parent root = loader.load();        
+        Scene scene = new Scene(root);
+        
+        // populate the array inventory
+        FXMLEditCustomerController editCustomerController = loader.getController();
+        editCustomerController.initData(customer); // sent the customer to be edited screen
+        
+        // get the hold of the stage (window of the button) 
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();  
         stage.setScene(scene);
     }
     
@@ -83,8 +111,9 @@ public class FXMLCustomerController implements Initializable {
         
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
-        //addressColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
-        //cityColumn.setCellValueFactory(new PropertyValueFactory<>("City"));
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
+        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("Phone"));
+        cityColumn.setCellValueFactory(new PropertyValueFactory<>("City"));
         countryColumn.setCellValueFactory(new PropertyValueFactory<>("Country"));
         
         tableViewCustomer.setItems(getCustomers());

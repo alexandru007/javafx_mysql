@@ -22,9 +22,8 @@ import model.Customer;
 public class DBConnection {
     
     private static Connection conn = null;
-    private Statement stmt = null;
-    private String dbUser = null;
-    private String dbPass = null;
+    private static Statement stmt = null;
+    private static ResultSet rs = null;
     
     public static void MakeConnection (){
         
@@ -33,7 +32,7 @@ public class DBConnection {
         
         //  Database credentials
         final String DBUSER = "U05mXQ";
-        final String DBPASS = "53688548906";
+        final String DBPASS = "";
 
         try {
             //STEP 2: Register JDBC driver
@@ -56,8 +55,6 @@ public class DBConnection {
         
         try {
             MakeConnection();
-            Statement stmt;
-            ResultSet rs = null;
             
             try {
                 stmt = conn.createStatement();
@@ -93,30 +90,30 @@ public class DBConnection {
 
             MakeConnection();
 
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String query = "SELECT customer.customerId, "
                     + "customer.customerName, "
                     + "address.address, "
                     + "address.phone, "
                     + "city.city,"
-                    + "country.county "
+                    + "country.country "
                     + "FROM customer "
                     + "INNER JOIN address ON customer.addressId = address.addressId "
-                    + "INNER JOIN city ON address.cityId = city.addressId "
+                    + "INNER JOIN city ON address.cityId = city.cityId "
                     + "INNER JOIN country ON city.countryId = country.countryId "
-                    + "AND LIMIT 5";
+                    + "LIMIT 10";
 
-            ResultSet rs = stmt.executeQuery(query);
+            rs = stmt.executeQuery(query);
 
             while (rs.next()) {
 
                 // while there is something in the row, look for next
-                int id = rs.getInt(0);
-                String name = rs.getString(1);
-                String address = rs.getString(2);
-                String phone = rs.getString(3);
-                String city = rs.getString(4);
-                String country = rs.getString(5);
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String address = rs.getString(3);
+                String phone = rs.getString(4);
+                String city = rs.getString(5);
+                String country = rs.getString(6);
 
                 Customer customer = new Customer();
                 customer.setId(id);
@@ -140,19 +137,97 @@ public class DBConnection {
 
     public static void addCustomer(Customer customer) {
 
+        // need to update all tables
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            
+            // ********* add country
+            String addCountryQuery = 
+                    String.format("INSERT INTO country (country, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                    + "VALUES (%s , now(), 'test', now(), 'test')", customer.getCountry());
+            stmt.executeUpdate(addCountryQuery);
+            
+            // ********* get the last contryid
+            rs = stmt.executeQuery("SELECT LAST_INSERT_ID() FROM country");
+            rs.next();
+            String countryId = rs.getString(1); // should return the last id
+            
+            // ********* add city
+            String addCityQuery = String.format("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                    + "VALUES (%s, %d, now(), 'test', now(), 'test')", customer.getCity(), Integer.parseInt(countryId));
+            stmt.executeUpdate(addCityQuery);
+            
+            // ********* get the last cityid
+            rs = stmt.executeQuery("SELECT LAST_INSERT_ID() FROM city");
+            rs.next();
+            String cityId = rs.getString(1); // should return the last id. to be used in the next query
+            
+            
+            // ********* add address
+            String addAddressQuery = String.format("INSERT INTO address (address, cityId, phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                    + "VALUES (%s, %d, %s, now(), 'test', now(), 'test')", customer.getAddress(), Integer.parseInt(cityId), customer.getPhone());
+            stmt.executeUpdate(addAddressQuery);
+            
+            // ********* get the last addressid
+            rs = stmt.executeQuery("SELECT LAST_INSERT_ID() FROM address");
+            rs.next();
+            String addressId = rs.getString(1); // should return the last id. to be used in the next query
+            
+            // ********* add customer
+            String addCustomerQuery = String.format("INSERT INTO customer (customerName, addressId, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                    + "VALUES (%s, %d, now(), 'test', now(), 'test')", customer.getName(), Integer.parseInt(addressId));
+            stmt.executeUpdate(addCustomerQuery);
+
+            CloseConnection();
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+    
+    public static void editCustomer (Customer customer) {
+        
+        // what is currently in the db needs to be updated with new
         //
         try {
             MakeConnection();
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
 
-            String customerName = customer.getName();
-            //String address = customer.getAddress();
-
-            String query
-                    = String.format("INSERT INTO customer('customerName') values('%s')",
-                            customerName);
+            // update customer name
+            String query = String.format("UPDATE customer SET customerName=%s WHERE customeId=%d", customer.getName(), customer.getId());
             stmt.executeUpdate(query);
-
+            
+            // get the address id
+            String addressIdQuery = String.format("SELECT addressId FROM customer WHERE customeId=%d", customer.getId());
+            stmt.executeUpdate(addressIdQuery);
+            rs.next();
+            String addressId = rs.getString(1);
+            
+            // update address
+            String updateAddressQuery = String.format("UPDATE address SET address=%s WHERE addressId=%d", customer.getAddress(), Integer.parseInt(addressId));
+            stmt.executeUpdate(updateAddressQuery);
+            
+            // get city id
+            String cityIdQuery = String.format("SELECT cityId FROM address WHERE addressId=%d", addressId);
+            stmt.executeUpdate(cityIdQuery);
+            rs.next();
+            String cityId = rs.getString(1);
+            
+            // update city
+            String updateCityQuery = String.format("UPDATE city SET city=%s WHERE cityId=%d", customer.getCity(), Integer.parseInt(cityId));
+            stmt.executeUpdate(updateCityQuery);
+            
+            // get country id
+            String countryIdQuery = String.format("SELECT countryId FROM city WHERE cityId=%d", cityId);
+            stmt.executeUpdate(countryIdQuery);
+            rs.next();
+            String countryId = rs.getString(1);
+            
+            // upadate country
+            String updateCountryQuery = String.format("UPDATE country SET country=%s WHERE countryId=%d", customer.getCountry(), Integer.parseInt(countryId));
+            stmt.executeUpdate(updateCountryQuery);
+            
             CloseConnection();
 
         } 

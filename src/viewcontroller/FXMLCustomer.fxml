@@ -8,16 +8,18 @@
 
 <AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1223.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLCustomerController">
    <children>
-      <TableView fx:id="tableViewCustomer" layoutX="180.0" layoutY="152.0" prefHeight="200.0" prefWidth="425.0">
+      <TableView fx:id="tableViewCustomer" layoutX="180.0" layoutY="152.0" prefHeight="200.0" prefWidth="592.0">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="addressColumn" prefWidth="75.0" text="Address" />
-            <TableColumn fx:id="cityColumn" prefWidth="75.0" text="City" />
-            <TableColumn fx:id="countryColumn" prefWidth="75.0" text="Country" />
+          <TableColumn fx:id="idColumn" prefWidth="29.0" text="Id" />
+            <TableColumn fx:id="nameColumn" prefWidth="119.0" text="Name" />
+          <TableColumn fx:id="addressColumn" prefWidth="226.0" text="Address" />
+            <TableColumn fx:id="phoneColumn" minWidth="9.0" prefWidth="60.0" text="Phone" />
+            <TableColumn fx:id="cityColumn" prefWidth="77.0" text="City" />
+            <TableColumn fx:id="countryColumn" text="Country" />
         </columns>
       </TableView>
       <Label layoutX="343.0" layoutY="118.0" prefHeight="17.0" prefWidth="99.0" text="Customers" />
-      <TableView layoutX="811.0" layoutY="152.0" prefHeight="200.0" prefWidth="242.0">
+      <TableView layoutX="925.0" layoutY="152.0" prefHeight="200.0" prefWidth="242.0">
          <columns>
             <TableColumn prefWidth="75.0" text="Type" />
             <TableColumn prefWidth="75.0" text="Location" />
@@ -25,11 +27,11 @@
          </columns>
       </TableView>
       <Label layoutX="852.0" layoutY="118.0" prefHeight="17.0" prefWidth="99.0" text="Appointments" />
-      <Button layoutX="40.0" layoutY="152.0" mnemonicParsing="false" text="Add Cutomer" />
+      <Button layoutX="40.0" layoutY="152.0" mnemonicParsing="false" onAction="#loadAddCustomerScene" text="Add Cutomer" />
       <Button layoutX="41.0" layoutY="193.0" mnemonicParsing="false" text="Edit Cutomer" />
       <Button layoutX="41.0" layoutY="235.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete Cutomer" />
-      <Button layoutX="663.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
-      <Button layoutX="663.0" layoutY="193.0" mnemonicParsing="false" text="Update Appointment" />
-      <Button layoutX="663.0" layoutY="235.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
+      <Button layoutX="788.0" layoutY="152.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
+      <Button layoutX="788.0" layoutY="193.0" mnemonicParsing="false" text="Update Appointment" />
+      <Button layoutX="788.0" layoutY="235.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
    </children>
 </AnchorPane>
