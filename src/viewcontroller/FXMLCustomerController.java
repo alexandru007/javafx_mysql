@@ -25,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Customer;
 import scheduleapp.DBConnection;
 
@@ -46,12 +47,21 @@ public class FXMLCustomerController implements Initializable {
     @FXML private TableColumn<Customer, String> countryColumn;
     
     
+    // appointments tableView
+    @FXML private TableView<Appointment> tableViewAppointments;
+    @FXML private TableColumn<Appointment, String> customerNameColumn;
+    @FXML private TableColumn<Appointment, String> titleColumn;
+    @FXML private TableColumn<Appointment, String> descriptionColumn;
+    @FXML private TableColumn<Appointment, String> locationColumn;
+    @FXML private TableColumn<Appointment, String> startTimeColumn;
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
     
-    // add customer
+    
     @FXML
     public void loadAddCustomerScene(ActionEvent event) throws IOException{
         
@@ -105,11 +115,31 @@ public class FXMLCustomerController implements Initializable {
         
         // reload the tableview
         loadCustomerTableView();
+        loadAppointmentsTableView();
     }
 
+    
+    public void loadAppointmentsTableView() {
+        
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        
+        tableViewAppointments.setItems(getAppointments());
+        
+    }
+    
+    private ObservableList<Appointment> getAppointments() {
+        
+        return FXCollections.observableArrayList(DBConnection.getAllAppointments());
+        
+    }
+    
     public void loadCustomerTableView() {
         
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("Id"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("Id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("Phone"));

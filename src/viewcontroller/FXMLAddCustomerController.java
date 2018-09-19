@@ -63,7 +63,7 @@ public class FXMLAddCustomerController implements Initializable {
         
         try {
             DBConnection.addCustomer(customer);
-            messageLabel.setText("Customer added");
+            messageLabel.setText("customer added");
         } catch (Exception e) {
             messageLabel.setText("unable to add a customer");
         }
@@ -85,6 +85,7 @@ public class FXMLAddCustomerController implements Initializable {
         
         FXMLCustomerController customerController = loader.getController();
         customerController.loadCustomerTableView();
+        customerController.loadAppointmentsTableView();
         
         // get the hold of the stage (window of the button) 
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();  

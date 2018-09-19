@@ -37,6 +37,8 @@ public class FXMLEditCustomerController implements Initializable {
     @FXML private TextField countryTextField;
     @FXML private Label errorMessageLabel;
     
+    private int customerID; // to keep track of current customer
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -45,6 +47,7 @@ public class FXMLEditCustomerController implements Initializable {
     // populate textFields
     public void initData(Customer customer) {
         
+        customerID = customer.getId();
         nameTextField.setText(customer.getName());
         addressTextField.setText(customer.getAddress());
         phoneTextField.setText(customer.getPhone());
@@ -53,7 +56,7 @@ public class FXMLEditCustomerController implements Initializable {
         
     }
     
-    public void editCustomer(ActionEvent event) {
+    public void editCustomer(ActionEvent event) throws IOException {
         
         if (    nameTextField.getText().equals("") || 
                 addressTextField.getText().equals("") ||
@@ -68,6 +71,7 @@ public class FXMLEditCustomerController implements Initializable {
         
         Customer customer = new Customer();
         
+        customer.setId(customerID);
         customer.setName(nameTextField.getText());
         customer.setAddress(addressTextField.getText());
         customer.setPhone(phoneTextField.getText());
@@ -75,9 +79,11 @@ public class FXMLEditCustomerController implements Initializable {
         customer.setCountry(countryTextField.getText());
         
         try {
-            DBConnection.addCustomer(customer); // needs refactor, edit instead of add
-            errorMessageLabel.setText("Customer saved");
-        } catch (Exception e) {
+            DBConnection.editCustomer(customer);
+            errorMessageLabel.setText("Customer edited");
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
             errorMessageLabel.setText("unable to save changes");
         }
         
@@ -90,12 +96,13 @@ public class FXMLEditCustomerController implements Initializable {
     public void goToMainScreen(ActionEvent event) throws IOException {
         
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/View_Controller/FXMLCustomer.fxml"));
+        loader.setLocation(getClass().getResource("/viewcontroller/FXMLCustomer.fxml"));
         Parent root = loader.load();        
         Scene scene = new Scene(root);
         
         FXMLCustomerController customerController = loader.getController();
         customerController.loadCustomerTableView();
+        customerController.loadAppointmentsTableView();
         
         // get the hold of the stage (window of the button) 
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();  

@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Appointment;
 import model.Customer;
 
 /**
@@ -23,7 +24,7 @@ public class DBConnection {
     
     private static Connection conn = null;
     private static Statement stmt = null;
-    private static ResultSet rs = null;
+    //private static ResultSet rs = null;
     
     public static void MakeConnection (){
         
@@ -59,7 +60,7 @@ public class DBConnection {
             try {
                 stmt = conn.createStatement();
                 String query = "SELECT * FROM user where userName='"+username+"' AND password='"+password+"'";
-                rs = stmt.executeQuery(query);
+                ResultSet rs = stmt.executeQuery(query);
 
                 // if anything was returned
                 if(rs.isBeforeFirst()){
@@ -103,7 +104,7 @@ public class DBConnection {
                     + "INNER JOIN country ON city.countryId = country.countryId "
                     + "LIMIT 10";
 
-            rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
 
@@ -134,6 +135,43 @@ public class DBConnection {
 
         return customers;
     }
+    
+    public static ArrayList<Appointment> getAllAppointments() {
+        
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT customer.customerName, "
+                    + "appointment.title, "
+                    + "appointment.description, "
+                    + "appointment.location, "
+                    + "appointment.start "
+                    + "FROM appointment, customer "
+                    + "WHERE appointment.customerId=customer.customerId "
+                    + "LIMIT 10";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                Appointment appointment = new Appointment();
+                
+                appointment.setCustomerName(rs.getString(1));
+                appointment.setTitle(rs.getString(2));
+                appointment.setDescription(rs.getString(3));
+                appointment.setLocation(rs.getString(4));
+                appointment.setStartTime(rs.getString(5));
+                
+                appointments.add(appointment);
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
 
     public static void addCustomer(Customer customer) {
 
@@ -145,17 +183,17 @@ public class DBConnection {
             // ********* add country
             String addCountryQuery = 
                     String.format("INSERT INTO country (country, createDate, createdBy, lastUpdate, lastUpdateBy) "
-                    + "VALUES (%s , now(), 'test', now(), 'test')", customer.getCountry());
+                    + "VALUES ('%s' , now(), 'test', now(), 'test')", customer.getCountry());
             stmt.executeUpdate(addCountryQuery);
             
             // ********* get the last contryid
-            rs = stmt.executeQuery("SELECT LAST_INSERT_ID() FROM country");
+            ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID() FROM country");
             rs.next();
             String countryId = rs.getString(1); // should return the last id
             
             // ********* add city
             String addCityQuery = String.format("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) "
-                    + "VALUES (%s, %d, now(), 'test', now(), 'test')", customer.getCity(), Integer.parseInt(countryId));
+                    + "VALUES ('%s', '%d', now(), 'test', now(), 'test')", customer.getCity(), Integer.parseInt(countryId));
             stmt.executeUpdate(addCityQuery);
             
             // ********* get the last cityid
@@ -166,7 +204,7 @@ public class DBConnection {
             
             // ********* add address
             String addAddressQuery = String.format("INSERT INTO address (address, cityId, phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
-                    + "VALUES (%s, %d, %s, now(), 'test', now(), 'test')", customer.getAddress(), Integer.parseInt(cityId), customer.getPhone());
+                    + "VALUES ('%s', '%d', '%s', now(), 'test', now(), 'test')", customer.getAddress(), Integer.parseInt(cityId), customer.getPhone());
             stmt.executeUpdate(addAddressQuery);
             
             // ********* get the last addressid
@@ -176,7 +214,7 @@ public class DBConnection {
             
             // ********* add customer
             String addCustomerQuery = String.format("INSERT INTO customer (customerName, addressId, createDate, createdBy, lastUpdate, lastUpdateBy) "
-                    + "VALUES (%s, %d, now(), 'test', now(), 'test')", customer.getName(), Integer.parseInt(addressId));
+                    + "VALUES ('%s', '%d', now(), 'test', now(), 'test')", customer.getName(), Integer.parseInt(addressId));
             stmt.executeUpdate(addCustomerQuery);
 
             CloseConnection();
@@ -195,40 +233,39 @@ public class DBConnection {
             stmt = conn.createStatement();
 
             // update customer name
-            String query = String.format("UPDATE customer SET customerName=%s WHERE customeId=%d", customer.getName(), customer.getId());
+            String query = String.format("UPDATE customer SET customerName='%s' WHERE customerId='%d'", customer.getName(), customer.getId());
             stmt.executeUpdate(query);
             
             // get the address id
-            String addressIdQuery = String.format("SELECT addressId FROM customer WHERE customeId=%d", customer.getId());
-            stmt.executeUpdate(addressIdQuery);
+            String addressIdQuery = String.format("SELECT addressId FROM customer WHERE customerId='%d'", customer.getId());
+            ResultSet rs = stmt.executeQuery(addressIdQuery);
             rs.next();
             String addressId = rs.getString(1);
             
             // update address
-            String updateAddressQuery = String.format("UPDATE address SET address=%s WHERE addressId=%d", customer.getAddress(), Integer.parseInt(addressId));
+            String updateAddressQuery = String.format("UPDATE address SET address='%s' WHERE addressId='%d'", customer.getAddress(), Integer.parseInt(addressId));
             stmt.executeUpdate(updateAddressQuery);
             
             // get city id
-            String cityIdQuery = String.format("SELECT cityId FROM address WHERE addressId=%d", addressId);
-            stmt.executeUpdate(cityIdQuery);
+            String cityIdQuery = String.format("SELECT cityId FROM address WHERE addressId='%d'", Integer.parseInt(addressId));
+            rs = stmt.executeQuery(cityIdQuery);
             rs.next();
             String cityId = rs.getString(1);
             
             // update city
-            String updateCityQuery = String.format("UPDATE city SET city=%s WHERE cityId=%d", customer.getCity(), Integer.parseInt(cityId));
+            String updateCityQuery = String.format("UPDATE city SET city='%s' WHERE cityId='%d'", customer.getCity(), Integer.parseInt(cityId));
             stmt.executeUpdate(updateCityQuery);
             
             // get country id
-            String countryIdQuery = String.format("SELECT countryId FROM city WHERE cityId=%d", cityId);
-            stmt.executeUpdate(countryIdQuery);
+            String countryIdQuery = String.format("SELECT countryId FROM city WHERE cityId='%d'", Integer.parseInt(cityId));
+            rs = stmt.executeQuery(countryIdQuery);
             rs.next();
             String countryId = rs.getString(1);
             
             // upadate country
-            String updateCountryQuery = String.format("UPDATE country SET country=%s WHERE countryId=%d", customer.getCountry(), Integer.parseInt(countryId));
-            stmt.executeUpdate(updateCountryQuery);
+            //String updateCountryQuery = String.format("UPDATE country SET country='%s' WHERE countryId='%d'", customer.getCountry(), Integer.parseInt(countryId));
+            //stmt.executeUpdate(updateCountryQuery);
             
-            CloseConnection();
 
         } 
         catch (Exception e) {

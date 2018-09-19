@@ -65,6 +65,7 @@ public class FXMLloginFormController implements Initializable {
             // load customer tableview
             FXMLCustomerController customerController = loader.getController();
             customerController.loadCustomerTableView();
+            customerController.loadAppointmentsTableView();
             
             // get the hold of the stage (window of the button) 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -87,7 +88,8 @@ public class FXMLloginFormController implements Initializable {
         String password = passwordTextField.getText();
         
         // compare the values with db
-        return DBConnection.isUserValid(username, password);
+        return true;
+        //return DBConnection.isUserValid(username, password);
     }
     
     public int getUserID(String username) {

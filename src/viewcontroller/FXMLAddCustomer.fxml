@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="423.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="viewcontroller.FXMLAddCutomerController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLAddCustomerController">
    <children>
       <Label layoutX="35.0" layoutY="29.0" prefHeight="17.0" prefWidth="124.0" text="Add Customer">
          <font>
@@ -25,7 +24,7 @@
       <TextField fx:id="countryTextField" layoutX="159.0" layoutY="252.0" />
       <Label layoutX="35.0" layoutY="256.0" prefHeight="17.0" prefWidth="77.0" text="Country" />
       <Button layoutX="270.0" layoutY="310.0" mnemonicParsing="false" onAction="#addCustomer" text="Add" />
-      <Label layoutX="172.0" layoutY="38.0" prefHeight="17.0" prefWidth="124.0" textFill="RED" />
+      <Label fx:id="messageLabel" layoutX="140.0" layoutY="29.0" prefHeight="17.0" prefWidth="226.0" textFill="RED" />
       <Button layoutX="183.0" layoutY="310.0" mnemonicParsing="false" onAction="#goToMainScreen" prefHeight="25.0" prefWidth="70.0" text="Cancel" />
    </children>
 </AnchorPane>
