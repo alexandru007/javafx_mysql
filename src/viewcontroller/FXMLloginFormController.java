@@ -5,6 +5,7 @@
  */
 package viewcontroller;
 
+import java.util.Locale;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,9 +43,23 @@ public class FXMLloginFormController implements Initializable {
     // log in button
     @FXML private Button loginButton;
     
+    // locale
+    Locale currentLocale;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        Locale.setDefault(new Locale("ro"));
+        
+        currentLocale = Locale.getDefault();
+        
+        if (currentLocale.getLanguage()== "ro") {
+            
+            // change labels to romanian
+            usernameLabel.setText("utilizator");
+            passwordLabel.setText("parola");
+            loginButton.setText("Logeaza-te");
+        }
     }
     
     @FXML
@@ -52,9 +67,6 @@ public class FXMLloginFormController implements Initializable {
         
         // before loading customer screen try to log in
         if (checkIfValidUser()) {
-            
-            // this is to keep track current user that is logged in
-            UserClass.setCurrentUserID(getUserID(usernameTextField.getText()));
             
             // get the hold of the stage (window of the button) 
             FXMLLoader loader = new FXMLLoader();
@@ -72,8 +84,19 @@ public class FXMLloginFormController implements Initializable {
             stage.setScene(scene);
         }
         else {
-            // display error message in 2 languages
-            errorMessageLabel.setText("wrong username or password, try again");
+            
+            currentLocale = Locale.getDefault();
+            
+            if (currentLocale.getLanguage() == "ro") {
+
+                // change labels to romanian
+                errorMessageLabel.setText("Gresit utilizator, introduceti datele inca odata");
+            }
+            else{
+                errorMessageLabel.setText("The username and password did not match");
+            }
+            
+            // empty the fields
             usernameTextField.setText("");
             passwordTextField.setText("");
         }
@@ -91,14 +114,4 @@ public class FXMLloginFormController implements Initializable {
         return true;
         //return DBConnection.isUserValid(username, password);
     }
-    
-    public int getUserID(String username) {
-        
-        // get the id from the DB
-        // select userId from user where userName = username
-        
-        return 0;
-        
-    }
-    
 }

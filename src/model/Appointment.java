@@ -11,6 +11,8 @@ package model;
  */
 public class Appointment {
     
+    private int appointmentId;
+    private int customerId;
     private String customerName;
     private String title;
     private String description;
@@ -85,6 +87,34 @@ public class Appointment {
      */
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    /**
+     * @return the customerId
+     */
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * @param customerId the customerId to set
+     */
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    /**
+     * @return the appointmentId
+     */
+    public int getAppointmentId() {
+        return appointmentId;
+    }
+
+    /**
+     * @param appointmentId the appointmentId to set
+     */
+    public void setAppointmentId(int appointmentId) {
+        this.appointmentId = appointmentId;
     }
     
 }

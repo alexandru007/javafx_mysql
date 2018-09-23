@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLAddAppointmentController">
+   <children>
+      <Label layoutX="51.0" layoutY="36.0" text="Add appointment" />
+      <TextField fx:id="titleTextField" layoutX="197.0" layoutY="141.0" />
+      <Label layoutX="82.0" layoutY="145.0" text="title/type" />
+      <TextField fx:id="descriptionTextField" layoutX="197.0" layoutY="181.0" />
+      <Label layoutX="82.0" layoutY="185.0" text="description" />
+      <TextField fx:id="locationTextField" layoutX="197.0" layoutY="231.0" />
+      <Label layoutX="82.0" layoutY="235.0" text="location" />
+      <Label layoutX="82.0" layoutY="279.0" text="appointment time" />
+      <Button fx:id="addAppointment" layoutX="279.0" layoutY="341.0" mnemonicParsing="false" onAction="#addAppointment" prefHeight="25.0" prefWidth="59.0" text="Add" />
+      <Button fx:id="cancelAppointment" layoutX="197.0" layoutY="341.0" mnemonicParsing="false" onAction="#goToMainScreen" prefHeight="25.0" prefWidth="59.0" text="Cancel" />
+      <Label fx:id="messageLabel" layoutX="208.0" layoutY="45.0" prefHeight="17.0" prefWidth="276.0" textFill="RED" />
+      <TextField fx:id="custometNameTextField" editable="false" layoutX="197.0" layoutY="95.0" />
+      <Label layoutX="82.0" layoutY="99.0" text="customer name" />
+      <ComboBox fx:id="comboBoxHour" layoutX="194.0" layoutY="284.0" prefHeight="25.0" prefWidth="59.0" promptText="hh" />
+      <ComboBox fx:id="comboBoxMin" layoutX="277.0" layoutY="284.0" prefHeight="25.0" prefWidth="72.0" promptText="min" />
+      <DatePicker fx:id="datePicker" layoutX="372.0" layoutY="284.0" promptText="1999-01-01" />
+   </children>
+</AnchorPane>

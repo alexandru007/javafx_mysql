@@ -32,9 +32,10 @@
       <Button layoutX="41.0" layoutY="88.0" mnemonicParsing="false" onAction="#loadAddCustomerScene" text="Add Cutomer" />
       <Button layoutX="42.0" layoutY="129.0" mnemonicParsing="false" onAction="#loadEditCustomerScene" text="Edit Cutomer" />
       <Button layoutX="42.0" layoutY="171.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete Cutomer" />
-      <Button layoutX="32.0" layoutY="362.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
+      <Button layoutX="42.0" layoutY="217.0" mnemonicParsing="false" onAction="#loadAddAppointmentsScene" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
       <Button layoutX="32.0" layoutY="403.0" mnemonicParsing="false" text="Update Appointment" />
-      <Button layoutX="32.0" layoutY="445.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
+      <Button layoutX="32.0" layoutY="445.0" mnemonicParsing="false" onAction="#deleteAppointment" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
       <Button layoutX="599.0" layoutY="617.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="View Calendar" />
+      <Label fx:id="message" layoutX="461.0" layoutY="54.0" prefHeight="17.0" prefWidth="174.0" text="please select a customer" textFill="RED" />
    </children>
 </AnchorPane>

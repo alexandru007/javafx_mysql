@@ -11,7 +11,7 @@ package scheduleapp;
  */
 public class UserClass {
     
-    public static int currentUserID;
+    private static int currentUserID;
     
     public static void setCurrentUserID(int id) {
         currentUserID = id;

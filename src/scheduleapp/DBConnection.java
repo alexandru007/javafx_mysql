@@ -33,7 +33,7 @@ public class DBConnection {
         
         //  Database credentials
         final String DBUSER = "U05mXQ";
-        final String DBPASS = "";
+        final String DBPASS = "53688548906";
 
         try {
             //STEP 2: Register JDBC driver
@@ -53,33 +53,26 @@ public class DBConnection {
     }
     
     public static boolean isUserValid(String username, String password) {
-        
+
         try {
             MakeConnection();
-            
-            try {
-                stmt = conn.createStatement();
-                String query = "SELECT * FROM user where userName='"+username+"' AND password='"+password+"'";
-                ResultSet rs = stmt.executeQuery(query);
+            stmt = conn.createStatement();
+            String query = "SELECT * FROM user where userName='" + username + "' AND password='" + password + "'";
+            ResultSet rs = stmt.executeQuery(query);
 
-                // if anything was returned
-                if(rs.isBeforeFirst()){
-                    
-                    // get the user id
-                    rs.next();
-                    UserClass.setCurrentUserID(rs.getInt("userId"));
-                    
-                    return true;
-                }
-                    
-                
-            } catch (Exception e) {
+            // if anything was returned
+            if (rs.isBeforeFirst()) {
+
+                // get the user id
+                rs.next();
+                UserClass.setCurrentUserID(rs.getInt("userId")); // set the global user id
+
+                return true;
             }
-            
-            
+
         } catch (Exception e) {
         }
-        
+
         return false;
     }
     
@@ -143,7 +136,8 @@ public class DBConnection {
         try {
             MakeConnection();
             stmt = conn.createStatement();
-            String query = "SELECT customer.customerName, "
+            String query = "SELECT appointment.appointmentId, "
+                    + "customer.customerName, "
                     + "appointment.title, "
                     + "appointment.description, "
                     + "appointment.location, "
@@ -158,11 +152,12 @@ public class DBConnection {
                 
                 Appointment appointment = new Appointment();
                 
-                appointment.setCustomerName(rs.getString(1));
-                appointment.setTitle(rs.getString(2));
-                appointment.setDescription(rs.getString(3));
-                appointment.setLocation(rs.getString(4));
-                appointment.setStartTime(rs.getString(5));
+                appointment.setAppointmentId(rs.getInt(1));
+                appointment.setCustomerName(rs.getString(2));
+                appointment.setTitle(rs.getString(3));
+                appointment.setDescription(rs.getString(4));
+                appointment.setLocation(rs.getString(5));
+                appointment.setStartTime(rs.getString(6));
                 
                 appointments.add(appointment);
             }  
@@ -222,6 +217,40 @@ public class DBConnection {
         catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+    
+    public static void addAppointment(Appointment appointment) {
+        
+        try {
+            
+            MakeConnection();
+            stmt = conn.createStatement();
+            
+            // start date needs to be date format
+            // database image is different from the actual db
+            
+            String query = String.format("INSERT INTO "
+                    + "appointment (customerId, title, description, location, contact, start, createDate, createdBy, lastUpdateBy )"
+                    + " VALUES ('%d', '%s', '%s', '%s', '%s', 'test', now(), 'test', 'test')", 
+                    appointment.getCustomerId(),
+                    appointment.getTitle(), 
+                    appointment.getDescription(), 
+                    appointment.getLocation(),
+                    appointment.getStartTime());
+            
+            try {
+                stmt.executeUpdate(query);    
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+            
+            
+            CloseConnection();
+            
+        } catch (Exception e) {
+            
+        }
+        
     }
     
     public static void editCustomer (Customer customer) {
@@ -292,4 +321,25 @@ public class DBConnection {
             System.out.println(e.toString());
         }  
     }
+    
+    public static void deleteAppointment(int appointmentId) {
+        
+        try {
+            MakeConnection();
+            Statement stmt;
+            
+            stmt = conn.createStatement();
+            String query = "DELETE FROM appointment WHERE appointmentId='"+appointmentId+"'";
+            stmt.executeUpdate(query);
+            
+            //close
+            CloseConnection();
+            
+            
+        } 
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }  
+    }
+    
 }

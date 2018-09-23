@@ -37,6 +37,11 @@ public class FXMLCustomerController implements Initializable {
     @FXML private Button editCustomer;
     @FXML private Button addCustomer;
     
+    // appointments buttons
+    @FXML private Button addAppointment;
+    @FXML private Button editAppointment;
+    @FXML private Button deleteAppointment;
+    
     // customer tableView
     @FXML private TableView<Customer> tableViewCustomer;
     @FXML private TableColumn<Customer, Integer> idColumn;
@@ -55,9 +60,15 @@ public class FXMLCustomerController implements Initializable {
     @FXML private TableColumn<Appointment, String> locationColumn;
     @FXML private TableColumn<Appointment, String> startTimeColumn;
     
+    // error message label
+    @FXML private Label message;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        // make meesage invisible
+        message.setOpacity(0.0);
         // TODO
     }
     
@@ -69,6 +80,29 @@ public class FXMLCustomerController implements Initializable {
         loader.setLocation(getClass().getResource("/viewcontroller/FXMLAddCustomer.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
+        
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+    }
+    
+    public void loadAddAppointmentsScene(ActionEvent event) throws IOException{
+        
+        // select a customer first
+        Customer customer = tableViewCustomer.getSelectionModel().getSelectedItem();
+        
+        if (customer == null) {
+            
+            message.setOpacity(1.0);   
+            return;
+        }
+        
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/viewcontroller/FXMLAddAppointment.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        
+        FXMLAddAppointmentController addAppointmentController = loader.getController();
+        addAppointmentController.initData(customer); // // pass the customer id
         
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
@@ -115,6 +149,22 @@ public class FXMLCustomerController implements Initializable {
         
         // reload the tableview
         loadCustomerTableView();
+        loadAppointmentsTableView();
+    }
+    
+    public void deleteAppointment() {
+        
+        Appointment appointment = tableViewAppointments.getSelectionModel().getSelectedItem();
+        
+        if(appointment == null){
+
+            return;
+        }
+        
+        // otherwise delete the customer
+        DBConnection.deleteAppointment(appointment.getAppointmentId());
+        
+        // reload the tableview
         loadAppointmentsTableView();
     }
 
