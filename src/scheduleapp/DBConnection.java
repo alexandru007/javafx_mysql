@@ -33,7 +33,7 @@ public class DBConnection {
         
         //  Database credentials
         final String DBUSER = "U05mXQ";
-        final String DBPASS = "53688548906";
+        final String DBPASS = "";
 
         try {
             //STEP 2: Register JDBC driver
