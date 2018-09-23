@@ -95,6 +95,7 @@ public class DBConnection {
                     + "INNER JOIN address ON customer.addressId = address.addressId "
                     + "INNER JOIN city ON address.cityId = city.cityId "
                     + "INNER JOIN country ON city.countryId = country.countryId "
+                    + "ORDER BY customer.customerName "
                     + "LIMIT 10";
 
             ResultSet rs = stmt.executeQuery(query);
@@ -144,6 +145,7 @@ public class DBConnection {
                     + "appointment.start "
                     + "FROM appointment, customer "
                     + "WHERE appointment.customerId=customer.customerId "
+                    + "ORDER BY customer.customerName "
                     + "LIMIT 10";
             
             ResultSet rs = stmt.executeQuery(query);
@@ -231,7 +233,7 @@ public class DBConnection {
             
             String query = String.format("INSERT INTO "
                     + "appointment (customerId, title, description, location, contact, start, createDate, createdBy, lastUpdateBy )"
-                    + " VALUES ('%d', '%s', '%s', '%s', '%s', 'test', now(), 'test', 'test')", 
+                    + " VALUES ('%d', '%s', '%s', '%s', 'test', '%s', now(), 'test', 'test')", 
                     appointment.getCustomerId(),
                     appointment.getTitle(), 
                     appointment.getDescription(), 
@@ -243,12 +245,11 @@ public class DBConnection {
             } catch (SQLException e) {
                 System.out.println(e.toString());
             }
-            
-            
+
             CloseConnection();
             
-        } catch (Exception e) {
-            
+        } catch (Exception e) { 
+            System.out.println(e.toString());
         }
         
     }
