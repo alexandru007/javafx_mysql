@@ -49,7 +49,7 @@ public class FXMLloginFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        Locale.setDefault(new Locale("ro"));
+        //Locale.setDefault(new Locale("ro")); // uncoment to test the romanian
         
         currentLocale = Locale.getDefault();
         

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLCalendarController">
+   <children>
+      <Label layoutX="36.0" layoutY="30.0" text="Calendar">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="textAreaMonth" layoutX="66.0" layoutY="92.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea fx:id="textAreaWeek" layoutX="335.0" layoutY="92.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="141.0" layoutY="64.0" text="Current Month" />
+      <Label layoutX="417.0" layoutY="64.0" text="Current Week" />
+      <Button layoutX="66.0" layoutY="327.0" mnemonicParsing="false" onAction="#goToMainScreen" text="Main Screen" />
+   </children>
+</AnchorPane>

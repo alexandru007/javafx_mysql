@@ -5,10 +5,10 @@
  */
 package viewcontroller;
 
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,8 +19,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -31,10 +29,15 @@ import model.Appointment;
 import model.Customer;
 import scheduleapp.DBConnection;
 
+/**
+ * FXML Controller class
+ *
+ * @author alisii
+ */
+public class FXMLEditAppointmentController implements Initializable {
 
-public class FXMLAddAppointmentController implements Initializable {
-
-    @FXML private Button addAppointment;
+    
+    @FXML private Button saveAppointment;
     @FXML private Button cancelAppointment;
     
     @FXML private TextField custometNameTextField;
@@ -50,7 +53,8 @@ public class FXMLAddAppointmentController implements Initializable {
     ObservableList<String> minutes = FXCollections.observableArrayList();
     @FXML private Label messageLabel;
     
-    private Customer customer;
+    Customer customer = new Customer();
+    int appointmentId;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -62,15 +66,21 @@ public class FXMLAddAppointmentController implements Initializable {
         
     }
     
-    public void initData(Customer customer) {
+    public void initData(Appointment appointment) {
         
-        this.customer = customer;
+        custometNameTextField.setText(appointment.getCustomerName());
+        typeTextField.setText(appointment.getType());
+        descriptionTextField.setText(appointment.getDescription());
+        locationTextField.setText(appointment.getLocation());
         
-        // display customer name
-        custometNameTextField.setText(this.customer.getName());
+        comboBoxHour.setValue("09");
+        comboBoxMin.setValue("00");
+        
+        this.customer.setId(appointment.getCustomerId());
+        this.appointmentId = appointment.getAppointmentId();// was passed from the tableview
     }
     
-    public void addAppointment(ActionEvent event) {
+    public void editAppointment(ActionEvent event) throws IOException {
         
         //check if fields are empty
         if (typeTextField.getText().equals("") ||
@@ -80,7 +90,7 @@ public class FXMLAddAppointmentController implements Initializable {
             comboBoxMin.getValue() == null || 
             datePicker.getValue() == null){
             
-            dialogBoxAlert("Please enter all required fields");
+            messageLabel.setText("Enter appointments details");
             return;
         
         }
@@ -88,8 +98,9 @@ public class FXMLAddAppointmentController implements Initializable {
         // add appointment
         Appointment appointment = new Appointment();
         
-        appointment.setCustomerId(customer.getId());
-        appointment.setCustomerName(customer.getName());
+        appointment.setAppointmentId(this.appointmentId);
+        appointment.setCustomerId(this.customer.getId());
+        appointment.setCustomerName(this.customer.getName());
         appointment.setType(typeTextField.getText());
         appointment.setDescription(descriptionTextField.getText());
         appointment.setLocation(locationTextField.getText());
@@ -101,33 +112,12 @@ public class FXMLAddAppointmentController implements Initializable {
         appointment.setStartTime(localDateTime.toString());
         
         try {
-            // check if appointment is overlapping
-            if(DBConnection.appointmentTimeExists(appointment)) {
-                // alert the user
-                dialogBoxAlert("This appointment is overlapping with an existing one");
-                
-                return;
-            }
-            
-            DBConnection.addAppointment(appointment);
-            messageLabel.setText("appointment added");
+            DBConnection.editAppointment(appointment);
         } catch (Exception e) {
-            messageLabel.setText("unable to add a appointment");
+            messageLabel.setText("Unable to save a appointment");
         }
         
-        // go to main screen
-        try {
-            goToMainScreen(event);
-        } catch (Exception e) {
-        }
-        
-    }
-    
-    public void dialogBoxAlert(String alertText) {
-        Alert alert = new Alert(AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setContentText(alertText);
-        alert.showAndWait();
+        goToMainScreen(event);
     }
     
     public void goToMainScreen(ActionEvent event) throws IOException {
@@ -145,5 +135,4 @@ public class FXMLAddAppointmentController implements Initializable {
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();  
         stage.setScene(scene);
     }
-    
 }

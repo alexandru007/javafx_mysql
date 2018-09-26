@@ -4,11 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="708.0" prefWidth="807.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLCustomerController">
+<AnchorPane id="AnchorPane" prefHeight="628.0" prefWidth="807.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLCustomerController">
    <children>
-      <TableView fx:id="tableViewCustomer" layoutX="181.0" layoutY="88.0" prefHeight="200.0" prefWidth="547.0">
+      <TableView fx:id="tableViewCustomer" layoutX="181.0" layoutY="88.0" prefHeight="121.0" prefWidth="547.0">
         <columns>
           <TableColumn fx:id="idColumn" prefWidth="29.0" text="Id" />
             <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
@@ -19,23 +20,28 @@
         </columns>
       </TableView>
       <Label layoutX="344.0" layoutY="54.0" prefHeight="17.0" prefWidth="99.0" text="Customers" />
-      <TableView fx:id="tableViewAppointments" layoutX="181.0" layoutY="362.0" prefHeight="200.0" prefWidth="547.0">
+      <TableView fx:id="tableViewAppointments" layoutX="181.0" layoutY="268.0" prefHeight="108.0" prefWidth="547.0">
          <columns>
             <TableColumn fx:id="customerNameColumn" prefWidth="107.0" text="Name" />
-            <TableColumn fx:id="titleColumn" prefWidth="71.0" text="Title" />
+            <TableColumn fx:id="typeColumn" prefWidth="71.0" text="Type" />
             <TableColumn fx:id="descriptionColumn" prefWidth="99.0" text="Description" />
             <TableColumn fx:id="locationColumn" prefWidth="103.0" text="Location" />
             <TableColumn fx:id="startTimeColumn" prefWidth="78.0" text="Start" />
          </columns>
       </TableView>
-      <Label layoutX="331.0" layoutY="327.0" prefHeight="17.0" prefWidth="99.0" text="Appointments" />
-      <Button layoutX="41.0" layoutY="88.0" mnemonicParsing="false" onAction="#loadAddCustomerScene" text="Add Cutomer" />
-      <Button layoutX="42.0" layoutY="129.0" mnemonicParsing="false" onAction="#loadEditCustomerScene" text="Edit Cutomer" />
-      <Button layoutX="42.0" layoutY="171.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete Cutomer" />
-      <Button layoutX="42.0" layoutY="217.0" mnemonicParsing="false" onAction="#loadAddAppointmentsScene" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
-      <Button layoutX="32.0" layoutY="403.0" mnemonicParsing="false" text="Update Appointment" />
-      <Button layoutX="32.0" layoutY="445.0" mnemonicParsing="false" onAction="#deleteAppointment" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
-      <Button layoutX="599.0" layoutY="617.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="View Calendar" />
+      <Label layoutX="331.0" layoutY="234.0" prefHeight="17.0" prefWidth="99.0" text="Appointments" />
+      <Button layoutX="41.0" layoutY="42.0" mnemonicParsing="false" onAction="#loadAddCustomerScene" text="Add Cutomer" />
+      <Button layoutX="40.0" layoutY="76.0" mnemonicParsing="false" onAction="#loadEditCustomerScene" text="Edit Cutomer" />
+      <Button layoutX="35.0" layoutY="110.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete Cutomer" />
+      <Button layoutX="21.0" layoutY="142.0" mnemonicParsing="false" onAction="#loadAddAppointmentsScene" prefHeight="25.0" prefWidth="129.0" text="Add Appointment" />
+      <Button layoutX="31.0" layoutY="268.0" mnemonicParsing="false" onAction="#loadEditAppointmentScene" text="Update Appointment" />
+      <Button layoutX="31.0" layoutY="297.0" mnemonicParsing="false" onAction="#deleteAppointment" prefHeight="25.0" prefWidth="129.0" text="Delete Appointment" />
+      <Button layoutX="31.0" layoutY="333.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="View Calendar" />
       <Label fx:id="message" layoutX="461.0" layoutY="54.0" prefHeight="17.0" prefWidth="174.0" text="please select a customer" textFill="RED" />
+      <Button layoutX="34.0" layoutY="437.0" mnemonicParsing="false" onAction="#viewAppointmentsTypes" text="Appointments types" />
+      <Button layoutX="34.0" layoutY="476.0" mnemonicParsing="false" onAction="#viewUserSchedule" prefHeight="25.0" prefWidth="123.0" text="Schedule per user" />
+      <Button layoutX="31.0" layoutY="515.0" mnemonicParsing="false" onAction="#viewCustomerAppointments" prefHeight="25.0" prefWidth="149.0" text="Customer/Appointments" />
+      <TextArea fx:id="textArea" layoutX="181.0" layoutY="440.0" prefHeight="121.0" prefWidth="547.0" />
+      <Label layoutX="331.0" layoutY="402.0" prefHeight="17.0" prefWidth="99.0" text="Reports" />
    </children>
 </AnchorPane>

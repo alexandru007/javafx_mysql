@@ -7,9 +7,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLAddAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewcontroller.FXMLEditAppointmentController">
    <children>
-      <Label layoutX="51.0" layoutY="36.0" text="Add appointment" />
+      <Label layoutX="51.0" layoutY="36.0" text="Edit appointment" />
       <TextField fx:id="typeTextField" layoutX="197.0" layoutY="141.0" />
       <Label layoutX="82.0" layoutY="145.0" text="type" />
       <TextField fx:id="descriptionTextField" layoutX="197.0" layoutY="181.0" />
@@ -17,7 +17,7 @@
       <TextField fx:id="locationTextField" layoutX="197.0" layoutY="231.0" />
       <Label layoutX="82.0" layoutY="235.0" text="location" />
       <Label layoutX="82.0" layoutY="279.0" text="appointment time" />
-      <Button fx:id="addAppointment" layoutX="279.0" layoutY="341.0" mnemonicParsing="false" onAction="#addAppointment" prefHeight="25.0" prefWidth="59.0" text="Add" />
+      <Button fx:id="saveAppointment" layoutX="279.0" layoutY="341.0" mnemonicParsing="false" onAction="#editAppointment" prefHeight="25.0" prefWidth="59.0" text="Save" />
       <Button fx:id="cancelAppointment" layoutX="197.0" layoutY="341.0" mnemonicParsing="false" onAction="#goToMainScreen" prefHeight="25.0" prefWidth="59.0" text="Cancel" />
       <Label fx:id="messageLabel" layoutX="208.0" layoutY="45.0" prefHeight="17.0" prefWidth="276.0" textFill="RED" />
       <TextField fx:id="custometNameTextField" editable="false" layoutX="197.0" layoutY="95.0" />

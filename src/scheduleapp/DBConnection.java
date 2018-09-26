@@ -10,9 +10,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.format.DateTimeFormatter;
 import model.Appointment;
 import model.Customer;
 
@@ -33,7 +37,7 @@ public class DBConnection {
         
         //  Database credentials
         final String DBUSER = "U05mXQ";
-        final String DBPASS = "";
+        final String DBPASS = "53688548906";
 
         try {
             //STEP 2: Register JDBC driver
@@ -139,7 +143,7 @@ public class DBConnection {
             stmt = conn.createStatement();
             String query = "SELECT appointment.appointmentId, "
                     + "customer.customerName, "
-                    + "appointment.title, "
+                    + "appointment.type, "
                     + "appointment.description, "
                     + "appointment.location, "
                     + "appointment.start "
@@ -156,7 +160,140 @@ public class DBConnection {
                 
                 appointment.setAppointmentId(rs.getInt(1));
                 appointment.setCustomerName(rs.getString(2));
-                appointment.setTitle(rs.getString(3));
+                appointment.setType(rs.getString(3));
+                appointment.setDescription(rs.getString(4));
+                appointment.setLocation(rs.getString(5));
+                
+                // convert the start time to local time
+                Timestamp timeStamp = rs.getTimestamp("start");
+                ZoneId newZoneId = ZoneId.systemDefault();
+                ZonedDateTime zdtStart = timeStamp.toLocalDateTime().atZone(ZoneId.of("UTC"));
+                ZonedDateTime zdtLocal = zdtStart.withZoneSameInstant(newZoneId);
+                
+                appointment.setStartTime(zdtLocal.toString());
+                
+                //appointment.setStartTime(rs.getString(6));
+                
+                appointments.add(appointment);
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
+    
+    public static String getAppointmentsByMonthByType() {
+        
+        
+        String appointments = "Date            Type              Type count \n";
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT date(start), type, count(type) from appointment "
+                    + "group by 1, 2";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                appointments += rs.getString(1) + "       ";
+                appointments += rs.getString(2) + "       ";
+                appointments += rs.getString(3) + "\n";
+                
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
+    
+    public static String getSheduleForPerUser() {
+        
+        
+        String appointments = "User           Appointment Type        Appointment Time \n";
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT contact, type, date(start) from appointment";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                appointments += rs.getString(1) + "           ";
+                appointments += rs.getString(2) + "           ";
+                appointments += rs.getString(3) + "\n";
+                
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
+    
+    public static String getRecentCustomers() {
+        
+        
+        String appointments = "Customer Name        Appointment Type        Appointment Time \n";
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT customer.customerName, appointment.type, date(appointment.start) "
+                    + "FROM customer, appointment "
+                    + "WHERE customer.customerId = appointment.customerId "
+                    + "ORDER BY 3 DESC";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                appointments += rs.getString(1) + "            ";
+                appointments += rs.getString(2) + "            ";
+                appointments += rs.getString(3) + "\n";
+                
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
+    
+    public static ArrayList<Appointment> getAppointmentsPerMonth() {
+        
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT appointment.appointmentId, "
+                    + "customer.customerName, "
+                    + "appointment.type, "
+                    + "appointment.description, "
+                    + "appointment.location, "
+                    + "appointment.start "
+                    + "FROM appointment, customer "
+                    + "WHERE appointment.customerId=customer.customerId "
+                    + "AND DATE(appointment.start) > CURDATE() "
+                    + "AND DATE(appointment.start) < DATE_ADD(CURDATE(), INTERVAL + 1 MONTH)"
+                    + "ORDER BY appointment.start "
+                    + "LIMIT 30";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                Appointment appointment = new Appointment();
+                
+                appointment.setAppointmentId(rs.getInt(1));
+                appointment.setCustomerName(rs.getString(2));
+                appointment.setType(rs.getString(3));
                 appointment.setDescription(rs.getString(4));
                 appointment.setLocation(rs.getString(5));
                 appointment.setStartTime(rs.getString(6));
@@ -170,6 +307,49 @@ public class DBConnection {
         
     }
 
+    
+    public static ArrayList<Appointment> getAppointmentsPerWeek() {
+        
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = "SELECT appointment.appointmentId, "
+                    + "customer.customerName, "
+                    + "appointment.type, "
+                    + "appointment.description, "
+                    + "appointment.location, "
+                    + "appointment.start "
+                    + "FROM appointment, customer "
+                    + "WHERE appointment.customerId=customer.customerId "
+                    + "AND DATE(appointment.start) > CURDATE() "
+                    + "AND DATE(appointment.start) < DATE_ADD(CURDATE(), INTERVAL + 1 WEEK)"
+                    + "ORDER BY appointment.start "
+                    + "LIMIT 30";
+            
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                
+                Appointment appointment = new Appointment();
+                
+                appointment.setAppointmentId(rs.getInt(1));
+                appointment.setCustomerName(rs.getString(2));
+                appointment.setType(rs.getString(3));
+                appointment.setDescription(rs.getString(4));
+                appointment.setLocation(rs.getString(5));
+                appointment.setStartTime(rs.getString(6));
+                
+                appointments.add(appointment);
+            }  
+        } catch (Exception e) {
+        }
+        
+        return appointments;
+        
+    }
+    
     public static void addCustomer(Customer customer) {
 
         // need to update all tables
@@ -232,10 +412,10 @@ public class DBConnection {
             // database image is different from the actual db
             
             String query = String.format("INSERT INTO "
-                    + "appointment (customerId, title, description, location, contact, start, createDate, createdBy, lastUpdateBy )"
+                    + "appointment (customerId, type, description, location, contact, start, createDate, createdBy, lastUpdateBy )"
                     + " VALUES ('%d', '%s', '%s', '%s', 'test', '%s', now(), 'test', 'test')", 
                     appointment.getCustomerId(),
-                    appointment.getTitle(), 
+                    appointment.getType(), 
                     appointment.getDescription(), 
                     appointment.getLocation(),
                     appointment.getStartTime());
@@ -252,6 +432,27 @@ public class DBConnection {
             System.out.println(e.toString());
         }
         
+    }
+    
+    public static boolean appointmentTimeExists(Appointment appointment) {
+        
+        try {
+            MakeConnection();
+            stmt = conn.createStatement();
+            String query = String.format("SELECT start from appointment WHERE appointmentId='%d')", appointment.getAppointmentId() );
+                    
+            
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            
+            if( appointment.getStartTime() == rs.getString("start")){
+                return false;
+            }
+
+        } catch (Exception e) {
+        }
+        
+        return true;
     }
     
     public static void editCustomer (Customer customer) {
@@ -323,6 +524,32 @@ public class DBConnection {
         }  
     }
     
+    
+    public static void editAppointment(Appointment appointment) {
+        
+        try {
+            
+            MakeConnection();
+            stmt = conn.createStatement();
+            
+            String query = String.format("UPDATE appointment SET "
+                    + "type='%s', "
+                    + "description='%s', "
+                    + "location='%s', "
+                    + "start='%s' "
+                    + "WHERE appointmentId='%d'",
+                    appointment.getType(),
+                    appointment.getDescription(),
+                    appointment.getLocation(),
+                    appointment.getStartTime(),
+                    appointment.getAppointmentId());
+            
+            stmt.executeUpdate(query);
+            
+        } catch (Exception e) {
+        }
+    }
+    
     public static void deleteAppointment(int appointmentId) {
         
         try {
@@ -335,8 +562,6 @@ public class DBConnection {
             
             //close
             CloseConnection();
-            
-            
         } 
         catch (Exception e) {
             System.out.println(e.toString());

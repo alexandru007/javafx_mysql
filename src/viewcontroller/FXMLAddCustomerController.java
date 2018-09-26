@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -39,17 +40,38 @@ public class FXMLAddCustomerController implements Initializable {
         
     }
     
+    public void dialogBoxAlert(String alertText) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setContentText(alertText);
+        alert.showAndWait();
+    }
+    
     public void addCustomer() {
         
-        if (    nameTextField.getText().equals("") || 
-                addressTextField.getText().equals("") ||
-                phoneTextField.getText().equals("") || 
-                cityTextField.getText().equals("") || 
-                countryTextField.getText().equals("")){
-            
-            messageLabel.setText("Please enter all required fields");
-            
-            return; // do nothing
+        if (nameTextField.getText().equals("")){    
+            dialogBoxAlert("Name cannot be empty");
+            return;
+        }
+        
+        if (addressTextField.getText().equals("")){    
+            dialogBoxAlert("address cannot be empty");
+            return;
+        }
+        
+        if (phoneTextField.getText().equals("")){    
+            dialogBoxAlert("Phone cannot be empty");
+            return;
+        }
+        
+        if (cityTextField.getText().equals("")){    
+            dialogBoxAlert("City cannot be empty");
+            return;
+        }
+        
+        if (countryTextField.getText().equals("")){    
+            dialogBoxAlert("Country cannot be empty");
+            return;
         }
         
         // otherwise add a new customer

@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -55,13 +56,16 @@ public class FXMLCustomerController implements Initializable {
     // appointments tableView
     @FXML private TableView<Appointment> tableViewAppointments;
     @FXML private TableColumn<Appointment, String> customerNameColumn;
-    @FXML private TableColumn<Appointment, String> titleColumn;
+    @FXML private TableColumn<Appointment, String> typeColumn;
     @FXML private TableColumn<Appointment, String> descriptionColumn;
     @FXML private TableColumn<Appointment, String> locationColumn;
     @FXML private TableColumn<Appointment, String> startTimeColumn;
     
     // error message label
     @FXML private Label message;
+    
+    // text are to show the reports
+    @FXML private TextArea textArea;
     
     
     @Override
@@ -132,6 +136,34 @@ public class FXMLCustomerController implements Initializable {
         stage.setScene(scene);
     }
     
+    // edit appointment
+    public void loadEditAppointmentScene(ActionEvent event) throws IOException{
+        
+        // check if no customer is selected
+        Appointment appointment = tableViewAppointments.getSelectionModel().getSelectedItem();
+        
+        if (appointment == null) {
+            
+            message.setText("Please select an appointment");
+            
+            return;
+        }
+            
+        
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/viewcontroller/FXMLEditAppointment.fxml"));
+        Parent root = loader.load();        
+        Scene scene = new Scene(root);
+        
+        // populate the array inventory
+        FXMLEditAppointmentController appointmentController = loader.getController();
+        appointmentController.initData(appointment); // sent the customer to be edited screen
+        
+        // get the hold of the stage (window of the button) 
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();  
+        stage.setScene(scene);
+    }
+    
     // delete customer
     public void deleteCustomer() {
         
@@ -172,7 +204,7 @@ public class FXMLCustomerController implements Initializable {
     public void loadAppointmentsTableView() {
         
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
@@ -203,5 +235,26 @@ public class FXMLCustomerController implements Initializable {
         
         // should get this from DB
         return FXCollections.observableArrayList(DBConnection.getAllCustomers());
+    }
+    
+    public void viewAppointmentsTypes() {
+        
+        String appointments = DBConnection.getAppointmentsByMonthByType();
+        textArea.setText(appointments);
+
+    }
+    
+    public void viewUserSchedule() {
+        
+        String schedule = DBConnection.getSheduleForPerUser();
+        textArea.setText(schedule);
+        
+    }
+    
+    public void viewCustomerAppointments() {
+        
+        String customerAppointments = DBConnection.getRecentCustomers();
+        textArea.setText(customerAppointments);
+        
     }
 }

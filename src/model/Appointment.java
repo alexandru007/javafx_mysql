@@ -14,7 +14,7 @@ public class Appointment {
     private int appointmentId;
     private int customerId;
     private String customerName;
-    private String title;
+    private String type;
     private String description;
     private String location;
     private String startTime;
@@ -36,15 +36,15 @@ public class Appointment {
     /**
      * @return the title
      */
-    public String getTitle() {
-        return title;
+    public String getType() {
+        return type;
     }
 
     /**
      * @param title the title to set
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
